@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
+import NavBar from './components/NavBar'
 import logo from './logo.svg';
 import './App.css';
+import { Route } from 'react-router-dom'
+import Welcome from './components/Welcome'
+import BudgetContainer from './components/BudgetContainer'
 
 class App extends Component {
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <NavBar />
+        <Route exact path="/" component={Welcome} />
+        <Route exact path="/budgets" component={BudgetContainer} />
       </div>
     );
   }
