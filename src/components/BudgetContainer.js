@@ -1,29 +1,24 @@
 import React, { Component } from 'react'
-import UserContainer from './userContainer'
+import MonthlyBudget from './MonthlyBudget'
+import CategoryBudgetList from './CategoryBudgetList'
 
 export default class BudgetContainer extends Component {
 
   state = {
-    monthlyBudgetAmount: 0,
-    categoryBudgets: []
-  }
-
-  fetchData(){
-    fetch("http://localhost:3000/api/users")
-    .then((response) => response.json())
-    .then((response) => console.log(response))
-  }
-
-  componentDidMount(){
-
-    this.fetchData()
+    monthlyBudgetAmount: 2500,
+    categoryBudgets: [
+      {categoryName: "booze", budgetTotal: 500}
+    ]
   }
 
   render() {
+
     return (
       <div>
-        <p>This is my budget</p>
-        <UserContainer/>
+        <MonthlyBudget {...this.state} />
+        <p>{this.props.user.password} </p>
+        <CategoryBudgetList {...this.state} />
+
       </div>
     )
   }
