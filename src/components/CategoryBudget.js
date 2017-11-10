@@ -1,7 +1,6 @@
 import React from 'react'
 
 const CategoryBudget = (props) => {
-  console.log(props)
   return (
     <div>
       <h3>{props.categoryName}</h3>
