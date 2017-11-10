@@ -10,7 +10,8 @@ export default class BudgetContainer extends Component {
     categoryBudgets: [
       {categoryName: "booze", budgetTotal: 500}
     ],
-    monthlyBudgetInput: 0
+    monthlyBudgetInput: 0,
+    hasBudget: false
   }
 
   handleBudgetChange = (event) => {
@@ -21,9 +22,10 @@ export default class BudgetContainer extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault()
-    let category1 = {category_name: event.target[1].value, category_budget_total: event.target[2].value,  monthly_budget_id: 1}
-    let category2 = {category_name: event.target[3].value, category_budget_total: event.target[4].value,  monthly_budget_id: 1}
-    let category3 = {category_name: event.target[5].value, category_budget_total: event.target[6].value, monthly_budget_id: 1}
+    let category1 = {category_name: event.target[1].value, category_budget_total: event.target[2].value, monthly_budget_id: 0 }
+    let category2 = {category_name: event.target[3].value, category_budget_total: event.target[4].value, monthly_budget_id: 0 }
+    let category3 = {category_name: event.target[5].value, category_budget_total: event.target[6].value, monthly_budget_id: 0 }
+
 
     fetch("http://localhost:3000/api/monthly_budgets",{
       headers:{
@@ -33,7 +35,7 @@ export default class BudgetContainer extends Component {
       method: "POST",
       body: JSON.stringify({user_id:1, budget_total:this.state.monthlyBudgetInput})
     })
-    .then(
+    .then(setTimeout(() => {
       fetch("http://localhost:3000/api/category_budgets",{
         headers:{
           'Accept': 'application/json',
@@ -45,18 +47,30 @@ export default class BudgetContainer extends Component {
           category2Key: category2,
           category3Key: category3
         })
-      })
+    })
+
+
+  }, 500)
     )
+    this.setState({hasBudget: true})
   }
 
 
   render() {
     return (
       <div>
-        <MonthlyBudget {...this.state} />
-        <p>{this.props.user.password} </p>
-        <CategoryBudgetList {...this.state} />
-        <MonthlyBudgetForm handleBudgetInput={this.handleBudgetChange} monthlyBudgetInput={this.state.monthlyBudgetInput} handleSubmit={this.handleSubmit} />
+        {
+          this.state.hasBudget ?
+          <div>
+            <MonthlyBudget {...this.state} />
+            <p>{this.props.user.password} </p>
+            <CategoryBudgetList {...this.state} />
+          </div>
+          :
+          <MonthlyBudgetForm handleBudgetInput={this.handleBudgetChange} monthlyBudgetInput={this.state.monthlyBudgetInput} handleSubmit={this.handleSubmit} />
+
+      }
+
       </div>
     )
   }
