@@ -39,6 +39,14 @@ export default class BudgetContainer extends Component {
       transactions: event.target[1].value,
       transactionTitle: event.target[0].value
     })
+    fetch("http://localhost:3000/api/transactions",{
+      headers:{
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify({name: event.target[0].value, amount:event.target[1].value})
+    })
   }
 
   handleBudgetChange = (event) => {
@@ -107,7 +115,7 @@ export default class BudgetContainer extends Component {
             <MonthlyBudget {...this.state} />
             <p>{this.props.user.password} </p>
             <CategoryBudgetList {...this.state} />
-            <TransactionForm handleTransaction={this.handleTransaction}/>
+            <TransactionForm handleTransaction={this.handleTransaction} categoryBudgets={this.state.categoryBudgets}/>
             <Transaction {...this.state}/>
           </div>
           :
