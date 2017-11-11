@@ -8,15 +8,30 @@ import Transaction from './Transaction'
 export default class BudgetContainer extends Component {
 
   state = {
-    monthlyBudgetAmount: 2500,
-    categoryBudgets: [
-      {categoryName: "booze", budgetTotal: 500}
-    ],
+    monthlyBudgetAmount: this.props.user.monthly_budgets[0].budget_total,
+    // The category budgets state should set to the right monthly budget's category budgets. Accomplish this with a serializer for monthly budget. UNFINISHED TENTATIVE FIX RIGHT NOW
+    categoryBudgets: this.props.user.category_budgets,
     monthlyBudgetInput: 0,
     transactions: 0 ,
     transactionTitle: "",
     hasBudget: false
   }
+
+  componentDidMount() {
+    this.setState({
+      hasBudget: this.determineHasBudget()
+    })
+  }
+
+  determineHasBudget = () => {
+    if(this.props.user.monthly_budgets === []) {
+      return false
+    } else {
+      return true
+    }
+  }
+
+
 
   handleTransaction = (event) => {
     event.preventDefault()
@@ -35,8 +50,6 @@ export default class BudgetContainer extends Component {
   checkForOverBudget = (event) => {
     let categoryBudgetSum = parseInt(event.target[2].value) + parseInt(event.target[4].value) + parseInt(event.target[6].value)
     let monthlyBudgetSum = parseInt(event.target[0].value)
-    console.log(categoryBudgetSum)
-    console.log(monthlyBudgetSum)
     if(categoryBudgetSum > monthlyBudgetSum){
       return true
     }else{
