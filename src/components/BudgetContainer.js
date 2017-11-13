@@ -14,12 +14,37 @@ export default class BudgetContainer extends Component {
     monthlyBudgetInput: 0,
     transactions: 0 ,
     transactionTitle: "",
-    hasBudget: false
+    hasBudget: false,
+    monthlyAmountLeft: this.calculateAmountLeft(),
+    toggle: true
   }
 
   componentDidMount() {
     this.setState({
       hasBudget: this.determineHasBudget()
+    })
+  }
+
+  calculateAmountLeft() {
+    const monthly_budget_id = this.props.user.monthly_budgets[0].id
+    let counter = 0
+    console.log("I'm here")
+    fetch(`http://localhost:3000/api/monthly_budgets/${monthly_budget_id}`)
+    .then(res => res.json())
+    .then(json => this.addTransactions(json, counter))
+  }
+
+
+  addTransactions(json, counter) {
+    json.transactions.forEach(transaction => {
+      counter += transaction.amount
+    })
+    this.setState({
+      monthlyAmountLeft: (parseInt(this.state.monthlyBudgetAmount) - counter)
+    })
+    console.log(this.state.monthlyBudgetAmount - counter)
+    this.setState({
+      toggle: false
     })
   }
 
@@ -39,6 +64,7 @@ export default class BudgetContainer extends Component {
       transactions: event.target[2].value,
       transactionTitle: event.target[1].value
     })
+    console.log(this.state)
     fetch("http://localhost:3000/api/transactions",{
       headers:{
         'Accept': 'application/json',
@@ -47,6 +73,7 @@ export default class BudgetContainer extends Component {
       method: "POST",
       body: JSON.stringify({name: event.target[1].value, amount:event.target[2].value, category_budget_id: event.target[0].value})
     })
+    .then(this.calculateAmountLeft())
   }
 
   handleBudgetChange = (event) => {
