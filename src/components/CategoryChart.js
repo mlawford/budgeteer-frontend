@@ -6,12 +6,18 @@ export default class CategoryChart extends Component {
   state = {
     data: {
         labels: [],
-        datasets: [{
-          label: 'Language Profiency',
-          fillColor: 'rgba(244,67,54,0.5)',
-          borderColor: '#000',
-          data: [4.5, 4, 4, 4, 3, 3, 2, 1.5],
-        }]
+        datasets: [
+          {
+            label: 'Language Profiency',
+            backgroundColor: '#31CB9B',
+            data: [this.props.monthlyBudgetAmount]
+          },
+          {
+            label: 'Language Profiency',
+            backgroundColor: 'yellow',
+            data: [500]
+          }
+        ]
       },
       options: {
         scales: {
@@ -24,7 +30,6 @@ export default class CategoryChart extends Component {
         }
     }
   }
-
 
   render() {
     return (

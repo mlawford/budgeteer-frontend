@@ -167,6 +167,7 @@ export default class BudgetContainer extends Component {
 
 
   render() {
+
     return (
       <div>
         {
@@ -175,7 +176,7 @@ export default class BudgetContainer extends Component {
             <MonthlyBudget {...this.state} />
             <p>{this.props.user.password} </p>
             <CategoryBudgetList {...this.state} />
-            <CategoryChart />
+            <CategoryChart monthlyBudgetAmount={this.state.monthlyBudgetAmount}/>
             <TransactionForm handleTransaction={this.handleTransaction} categoryBudgets={this.state.categoryBudgets}/>
             <Transaction {...this.state}/>
           </div>
@@ -183,7 +184,7 @@ export default class BudgetContainer extends Component {
           <MonthlyBudgetForm handleBudgetInput={this.handleBudgetChange} monthlyBudgetInput={this.state.monthlyBudgetInput} handleSubmit={this.handleSubmit} />
 
       }
-        <MyComponent/>
+
       </div>
     )
   }
