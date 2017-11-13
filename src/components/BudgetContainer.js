@@ -183,6 +183,7 @@ export default class BudgetContainer extends Component {
           <MonthlyBudgetForm handleBudgetInput={this.handleBudgetChange} monthlyBudgetInput={this.state.monthlyBudgetInput} handleSubmit={this.handleSubmit} />
 
       }
+        <MyComponent/>
       </div>
     )
   }
