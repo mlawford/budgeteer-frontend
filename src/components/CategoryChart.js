@@ -8,9 +8,9 @@ export default class CategoryChart extends Component {
         labels: this.mapCategoryTitles(),
         datasets: [{
           label: 'Language Profiency',
-          fillColor: 'rgba(244,67,54,0.5)',
-          borderColor: '#000',
+          backgroundColor: ['#31CB9B','#98e6ce'],
           data: this.mapCategoryAmounts(),
+          hoverBoderColor: 'black'
         }]
       },
       options: {
@@ -24,6 +24,12 @@ export default class CategoryChart extends Component {
         }
     }
   }
+
+
+  // calculateCategory1Spent(){
+  //   let percent = ((this.props.category1AmountLeft/this.state.categoryBudgets[0].category_budget_total)*100)
+  //   return 100-percent
+  // }
 
   mapCategoryTitles() {
     return this.props.categoryBudgets.map(category => category.category_name)

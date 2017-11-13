@@ -163,3 +163,35 @@ p.banner{
   z-index:99;
   font-size: 18px;
 }
+
+h2.banner{
+  position: fixed;
+  float: left;
+  font-size: 32px;
+  opacity: 0.2;
+  padding-left: 115px;
+}
+
+.w3-container.w3-green.w3-round {
+  position: relative;
+  width: 200px;
+  height: 100%;
+  font-size: 60px;
+  background-color: #31CB9B
+}
+
+.w3-light-grey.w3-round{
+  position: relative;
+  margin-left: 300px;
+  width: 50%;
+  height: 100px;
+}
+
+.progress-left{
+  position: absolute;
+  left: 780px;
+  top: 90px;
+  opacity: 0.3;
+  font-size: 40px;
+  z-index:99;
+}

@@ -22,6 +22,12 @@ export default class BudgetContainer extends Component {
     category2AmountLeft: this.getTransactions(2),
   }
 
+  calculateProgressBar(){
+    let percent = ((this.state.monthlyAmountLeft/this.state.monthlyBudgetAmount)*100)
+    return 100-percent
+  }
+
+
   componentDidMount() {
     this.setState({
       hasBudget: this.determineHasBudget()
@@ -167,20 +173,35 @@ export default class BudgetContainer extends Component {
 
 
   render() {
+    var monthNames = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+
+    var d = new Date();
 
     return (
+
       <div>
+      <div className="navbar">
+        <a href="#home">Budgeteer</a>
+      </div>
+
+      <div className="logo"/>
+      <h1>Welcome Back! </h1>
+      <h2 className="banner">{monthNames[d.getMonth()]} </h2>
+      <div class="w3-light-grey w3-round">
+         <div class="w3-container w3-green w3-round" style={{"width":`${this.calculateProgressBar()}%`}}>${this.state.monthlyBudgetAmount-this.state.monthlyAmountLeft}</div>
+       </div>
+       <div className="progress-left"> ${this.state.monthlyAmountLeft} </div>
         {
           this.state.hasBudget ?
           <div>
             <MonthlyBudget {...this.state} />
-            <p>{this.props.user.password} </p>
+
             <CategoryBudgetList {...this.state} />
-<<<<<<< HEAD
-            <CategoryChart monthlyBudgetAmount={this.state.monthlyBudgetAmount}/>
-=======
+
             <CategoryChart {...this.state}/>
->>>>>>> 64e845a2a0ddc012fa97fdfcb92274b37622edd2
+
             <TransactionForm handleTransaction={this.handleTransaction} categoryBudgets={this.state.categoryBudgets}/>
             <Transaction {...this.state}/>
           </div>
