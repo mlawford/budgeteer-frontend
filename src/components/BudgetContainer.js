@@ -4,6 +4,7 @@ import CategoryBudgetList from './CategoryBudgetList'
 import MonthlyBudgetForm from './MonthlyBudgetForm'
 import TransactionForm from './TransactionForm'
 import Transaction from './Transaction'
+import CategoryChart from './CategoryChart'
 
 export default class BudgetContainer extends Component {
 
@@ -174,6 +175,7 @@ export default class BudgetContainer extends Component {
             <MonthlyBudget {...this.state} />
             <p>{this.props.user.password} </p>
             <CategoryBudgetList {...this.state} />
+            <CategoryChart />
             <TransactionForm handleTransaction={this.handleTransaction} categoryBudgets={this.state.categoryBudgets}/>
             <Transaction {...this.state}/>
           </div>
