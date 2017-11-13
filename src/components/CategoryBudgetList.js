@@ -8,7 +8,6 @@ export default class CategoryBudgetList extends Component {
 
 
   render() {
-    console.log(this.props)
     const mappedCategoryBudgets = this.props.categoryBudgets.map((category,idx) => {
       return (<CategoryBudget key={idx} categoryName={category.category_name} budgetTotal={category.category_budget_total} />)
     })

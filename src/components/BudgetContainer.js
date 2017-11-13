@@ -13,7 +13,7 @@ export default class BudgetContainer extends Component {
     // The category budgets state should set to the right monthly budget's category budgets. Accomplish this with a serializer for monthly budget. UNFINISHED TENTATIVE FIX RIGHT NOW
     categoryBudgets: this.props.user.category_budgets,
     monthlyBudgetInput: 0,
-    transactions: 0 ,
+    transactions: 0,
     transactionTitle: "",
     hasBudget: false,
     monthlyAmountLeft: this.calculateAmountLeft(),
@@ -37,7 +37,6 @@ export default class BudgetContainer extends Component {
   calculateAmountLeft() {
     const monthly_budget_id = this.props.user.monthly_budgets[0].id
     let counter = 0
-    console.log("I'm here")
     fetch(`http://localhost:3000/api/monthly_budgets/${monthly_budget_id}`)
     .then(res => res.json())
     .then(json => this.addTransactions(json, counter))
@@ -51,7 +50,6 @@ export default class BudgetContainer extends Component {
     this.setState({
       monthlyAmountLeft: (parseInt(this.state.monthlyBudgetAmount) - counter)
     })
-    console.log(this.state.monthlyBudgetAmount - counter)
     this.setState({
       toggle: false
     })
@@ -74,7 +72,6 @@ export default class BudgetContainer extends Component {
       transactionTitle: event.target[1].value,
 
     })
-    console.log(this.state)
     fetch("http://localhost:3000/api/transactions",{
       headers:{
         'Accept': 'application/json',
@@ -149,7 +146,6 @@ export default class BudgetContainer extends Component {
 
   getTransactions(id) {
     let counter = 0
-    console.log("I'm here")
     fetch(`http://localhost:3000/api/monthly_budgets/1`)
     .then(res => res.json())
     .then(json => this.mapTransactions(json,counter, id))
@@ -172,6 +168,37 @@ export default class BudgetContainer extends Component {
       }
 
 
+      // For calculating amount spent in each category for Chart
+
+
+    createChartData = () => {
+      let data = []
+      let transactionArr = []
+      fetch('http://localhost:3000/api/transactions')
+      .then(res => res.json())
+      .then(json => {
+        transactionArr = json
+      })
+      .then(() => {
+        this.state.categoryBudgets.forEach(category => {
+          let acc = 0
+          console.log(transactionArr)
+          transactionArr.forEach(transaction => {
+            console.log(transaction)
+            if(category.id === transaction.category_budget_id) {
+              acc += transaction.amount
+            }
+          })
+          data.push(acc)
+          console.log(acc)
+        })
+        console.log(data)
+        return data
+
+      })
+    }
+
+
   render() {
     var monthNames = ["January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December"
@@ -189,8 +216,8 @@ export default class BudgetContainer extends Component {
       <div className="logo"/>
       <h1>Welcome Back! </h1>
       <h2 className="banner">{monthNames[d.getMonth()]} </h2>
-      <div class="w3-light-grey w3-round">
-         <div class="w3-container w3-green w3-round" style={{"width":`${this.calculateProgressBar()}%`}}>${this.state.monthlyBudgetAmount-this.state.monthlyAmountLeft}</div>
+      <div className="w3-light-grey w3-round">
+         <div className="w3-container w3-green w3-round" style={{"width":`${this.calculateProgressBar()}%`}}>${this.state.monthlyBudgetAmount-this.state.monthlyAmountLeft}</div>
        </div>
        <div className="progress-left"> ${this.state.monthlyAmountLeft} </div>
         {
@@ -200,7 +227,7 @@ export default class BudgetContainer extends Component {
 
             <CategoryBudgetList {...this.state} />
 
-            <CategoryChart {...this.state}/>
+            <CategoryChart createChartData={this.createChartData} {...this.state}/>
 
             <TransactionForm handleTransaction={this.handleTransaction} categoryBudgets={this.state.categoryBudgets}/>
             <Transaction {...this.state}/>

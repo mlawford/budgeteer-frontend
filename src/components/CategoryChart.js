@@ -9,7 +9,7 @@ export default class CategoryChart extends Component {
         datasets: [{
           label: 'Language Profiency',
           backgroundColor: ['#31CB9B','#98e6ce'],
-          data: this.mapCategoryAmounts(),
+          data: this.props.createChartData(),
           hoverBoderColor: 'black'
         }]
       },
