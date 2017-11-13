@@ -4,6 +4,8 @@ import CategoryBudgetList from './CategoryBudgetList'
 import MonthlyBudgetForm from './MonthlyBudgetForm'
 import TransactionForm from './TransactionForm'
 import Transaction from './Transaction'
+import MyComponent from './chart'
+
 
 export default class BudgetContainer extends Component {
 
@@ -181,6 +183,7 @@ export default class BudgetContainer extends Component {
           <MonthlyBudgetForm handleBudgetInput={this.handleBudgetChange} monthlyBudgetInput={this.state.monthlyBudgetInput} handleSubmit={this.handleSubmit} />
 
       }
+        <MyComponent/>
       </div>
     )
   }
