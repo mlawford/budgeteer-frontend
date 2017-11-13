@@ -36,8 +36,8 @@ export default class BudgetContainer extends Component {
   handleTransaction = (event) => {
     event.preventDefault()
     this.setState({
-      transactions: event.target[1].value,
-      transactionTitle: event.target[0].value
+      transactions: event.target[2].value,
+      transactionTitle: event.target[1].value
     })
     fetch("http://localhost:3000/api/transactions",{
       headers:{
@@ -45,7 +45,7 @@ export default class BudgetContainer extends Component {
         'Content-Type': 'application/json'
       },
       method: "POST",
-      body: JSON.stringify({name: event.target[0].value, amount:event.target[1].value})
+      body: JSON.stringify({name: event.target[1].value, amount:event.target[2].value, category_budget_id: event.target[0].value})
     })
   }
 
