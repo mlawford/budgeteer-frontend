@@ -26,3 +26,140 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+body {margin:0;}
+
+.navbar {
+  overflow: hidden;
+  background-color: white;
+  opacity: 0.9;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 10%;
+  z-index:95;
+}
+
+.navbar a {
+
+  position: absolute;
+  left: 100px;
+  top: 8px;
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 32px;
+  font-weight: bold;
+
+
+}
+
+.main {
+  padding: 50px;
+  margin-top: 30px;
+
+  height: 1500px; /* Used in this example to enable scrolling */
+}
+
+.button {
+    background-color: #31CB9B; /* Green */
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+    position: absolute;
+    top: 450px;
+    left: 510px;
+      z-index:99;
+}
+
+.button1 {
+    background-color: #31CB9B;
+    color: white;
+    width: 20%;
+    position: absolute;
+    top: 450px;
+    left: 510px;
+      z-index:99;
+}
+
+.button1:hover {
+    background-color: #23906d;
+    color: white;
+    position: absolute;
+    top: 450px;
+    left: 510px;
+      z-index:99;
+}
+
+.img-container{
+  width:100%;
+  height: 700px;
+  background-image: url("http://ak4.picdn.net/shutterstock/videos/6554474/thumb/1.jpg") ;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+
+.img-body-container{
+  width:100%;
+  height: 100%;
+  content: url("https://i.imgur.com/kJc3u3Y.png") ;
+
+}
+
+.layer {
+    background-color: rgba(7, 7, 7, 0.6);
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index:1;
+}
+
+.logo {
+  position: absolute;
+  content: url("https://i.imgur.com/myKKltd.png");
+  top:18px;
+  left: 25px;
+  width: 6%;
+  height: 9%;
+  z-index:99;
+
+}
+
+.bottom {
+  z-index:98;
+}
+
+h1.banner{
+  position: absolute;
+  top:245px;
+  left: 325px;
+  width: 50%;
+  height: 50%;
+  color: white;
+  z-index:99;
+  font-size: 55px;
+}
+
+p.banner{
+  position: absolute;
+  top:350px;
+  left: 325px;
+  width: 50%;
+  height: 50%;
+  color: white;
+  z-index:99;
+  font-size: 18px;
+}
