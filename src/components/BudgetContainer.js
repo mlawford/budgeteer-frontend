@@ -14,14 +14,9 @@ export default class BudgetContainer extends Component {
     monthlyBudgetInput: 0,
     transactions: 0 ,
     transactionTitle: "",
-<<<<<<< HEAD
-    hasBudget: false
-
-=======
     hasBudget: false,
     monthlyAmountLeft: this.calculateAmountLeft(),
     toggle: true
->>>>>>> 13b483e22bea6ae6dac7d6efc4b9a8b66d253f50
   }
 
   componentDidMount() {
@@ -67,7 +62,8 @@ export default class BudgetContainer extends Component {
     event.preventDefault()
     this.setState({
       transactions: event.target[2].value,
-      transactionTitle: event.target[1].value
+      transactionTitle: event.target[1].value,
+
     })
     console.log(this.state)
     fetch("http://localhost:3000/api/transactions",{
