@@ -16,7 +16,9 @@ export default class BudgetContainer extends Component {
     transactionTitle: "",
     hasBudget: false,
     monthlyAmountLeft: this.calculateAmountLeft(),
-    toggle: true
+    toggle: true,
+    category1AmountLeft: this.getTransactions(1),
+    category2AmountLeft: this.getTransactions(2),
   }
 
   componentDidMount() {
@@ -75,6 +77,7 @@ export default class BudgetContainer extends Component {
       body: JSON.stringify({name: event.target[1].value, amount:event.target[2].value, category_budget_id: event.target[0].value})
     })
     .then(this.calculateAmountLeft())
+    .then(this.getTransactions())
   }
 
   handleBudgetChange = (event) => {
@@ -132,6 +135,34 @@ export default class BudgetContainer extends Component {
       console.log("OVERBUDGET")
     }
   }
+
+
+  // For rendering category budget amounts left
+
+
+  getTransactions(id) {
+    let counter = 0
+    console.log("I'm here")
+    fetch(`http://localhost:3000/api/monthly_budgets/1`)
+    .then(res => res.json())
+    .then(json => this.mapTransactions(json,counter, id))
+  }
+
+    mapTransactions(json, counter, id){
+      json.transactions.forEach(transaction => {
+        if (transaction.category_budget_id === id)
+          counter += transaction.amount
+        })
+        if (id === 1) {
+          this.setState({
+            category1AmountLeft: parseInt(this.state.categoryBudgets[0].category_budget_total) - counter
+          })
+        } else if (id === 2) {
+          this.setState({
+            category2AmountLeft: parseInt(this.state.categoryBudgets[1].category_budget_total) - counter
+          })
+        }
+      }
 
 
   render() {
