@@ -7,7 +7,7 @@ const Welcome = (props) => {
     <div>
       <div className="navbar">
         <a href="#home">Budgeteer</a>
-        
+
       </div>
 
       <div className= "img-container">

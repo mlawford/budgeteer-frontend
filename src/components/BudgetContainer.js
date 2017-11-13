@@ -28,6 +28,8 @@ export default class BudgetContainer extends Component {
   }
 
 
+
+
   componentDidMount() {
     this.setState({
       hasBudget: this.determineHasBudget()
@@ -48,6 +50,7 @@ export default class BudgetContainer extends Component {
     json.transactions.forEach(transaction => {
       counter += transaction.amount
     })
+    console.log('sdkjbsd', parseInt(this.state.monthlyBudgetAmount) - counter)
     this.setState({
       monthlyAmountLeft: (parseInt(this.state.monthlyBudgetAmount) - counter)
     })
@@ -187,18 +190,18 @@ export default class BudgetContainer extends Component {
       </div>
 
       <div className="logo"/>
-      <h1>Welcome Back! </h1>
+      <h1 className="grey-header">Welcome Back! </h1>
       <h2 className="banner">{monthNames[d.getMonth()]} </h2>
       <div class="w3-light-grey w3-round">
          <div class="w3-container w3-green w3-round" style={{"width":`${this.calculateProgressBar()}%`}}>${this.state.monthlyBudgetAmount-this.state.monthlyAmountLeft}</div>
-       </div>
+       </div> ${this.state.monthlyBudgetAmount}
        <div className="progress-left"> ${this.state.monthlyAmountLeft} </div>
         {
           this.state.hasBudget ?
           <div>
-            <MonthlyBudget {...this.state} />
 
-            <CategoryBudgetList {...this.state} />
+
+
 
             <CategoryChart {...this.state}/>
 

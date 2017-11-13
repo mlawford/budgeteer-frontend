@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import '../App.css';
 
 export default class TransactionForm extends Component {
   state = {
@@ -29,13 +30,14 @@ export default class TransactionForm extends Component {
     render() {
 
       return (
-      <form onSubmit={this.props.handleTransaction}>
+      <form className='form'onSubmit={this.props.handleTransaction}>
+      <label> Category </label>
         <select>
           {this.mapCategories()}
-        </select>
-        <input onChange={this.nameChange} name="transactionFormName" value={this.state.transactionFormName} type="text"/>
-        <input onChange={this.amountChange} name="transactionFormAmount" value={this.state.transactionFormAmount} type="number"/>
-        <input type="submit"/>
+        </select><br/>
+        <input onChange={this.nameChange} name="transactionFormName" placeholder="What did you buy?" value={this.state.transactionFormName} type="text"/><br/>
+        <input onChange={this.amountChange} name="transactionFormAmount" value={this.state.transactionFormAmount}placeholder="How much did it cost?" type="number"/><br/>
+        <input type="submit" value="Add Transaction"/><br/>
       </form>
     )
   }
