@@ -15,6 +15,7 @@ export default class BudgetContainer extends Component {
     transactions: 0 ,
     transactionTitle: "",
     hasBudget: false
+
   }
 
   componentDidMount() {
