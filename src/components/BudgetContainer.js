@@ -175,7 +175,7 @@ export default class BudgetContainer extends Component {
             <MonthlyBudget {...this.state} />
             <p>{this.props.user.password} </p>
             <CategoryBudgetList {...this.state} />
-            <CategoryChart />
+            <CategoryChart {...this.state}/>
             <TransactionForm handleTransaction={this.handleTransaction} categoryBudgets={this.state.categoryBudgets}/>
             <Transaction {...this.state}/>
           </div>

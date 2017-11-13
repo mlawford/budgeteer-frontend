@@ -5,12 +5,12 @@ import {Doughnut} from 'react-chartjs-2';
 export default class CategoryChart extends Component {
   state = {
     data: {
-        labels: [],
+        labels: this.mapCategoryTitles(),
         datasets: [{
           label: 'Language Profiency',
           fillColor: 'rgba(244,67,54,0.5)',
           borderColor: '#000',
-          data: [4.5, 4, 4, 4, 3, 3, 2, 1.5],
+          data: this.mapCategoryAmounts(),
         }]
       },
       options: {
@@ -23,6 +23,14 @@ export default class CategoryChart extends Component {
           }]
         }
     }
+  }
+
+  mapCategoryTitles() {
+    return this.props.categoryBudgets.map(category => category.category_name)
+  }
+
+  mapCategoryAmounts() {
+    return this.props.categoryBudgets.map(category => category.category_budget_total)
   }
 
 
