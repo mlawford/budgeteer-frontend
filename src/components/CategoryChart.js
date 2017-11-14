@@ -5,58 +5,58 @@ import {Doughnut} from 'react-chartjs-2';
 export default class CategoryChart extends Component {
   state = {
     data: {
-        labels: this.mapCategoryTitles(),
-        datasets: [{
-          label: 'Language Profiency',
-          backgroundColor: ['#31CB9B','#98e6ce'],
-          data: [],
-          hoverBoderColor: 'black'
+      labels: this.mapCategoryTitles(),
+      datasets: [{
+        label: 'Language Profiency',
+        backgroundColor: ['#31CB9B','#98e6ce'],
+        data: [],
+        hoverBoderColor: 'black'
+      }]
+    },
+    options: {
+      scales: {
+        xAxes: [{
+          stacked: true
+        }],
+        yAxes: [{
+          stacked: true
         }]
-      },
-      options: {
-        scales: {
-          xAxes: [{
-            stacked: true
-          }],
-          yAxes: [{
-            stacked: true
-          }]
-        }
+      }
     }
   }
 
-  componentDidMount() {
-    this.createChartData()
+  componentWillReceiveProps(nextProps) {
+    debugger
+    this.createChartData(nextProps)
   }
 
-  createChartData = () => {
-    let chartData = []
-    let transactionArr = []
-    fetch('http://localhost:3000/api/transactions')
-    .then(res => res.json())
-    .then(json => {
-      transactionArr = json
+  setChartData = (chartData) => {
+    this.setState({
+      data: {
+        ...this.state.data,
+        datasets: [{
+          ...this.state.data.datasets[0],
+          data: chartData
+        }]
+      }
     })
-    .then(() => {
-      this.props.categoryBudgets.forEach(category => {
-        let acc = 0
-        transactionArr.forEach(transaction => {
-          if(category.id === transaction.category_budget_id) {
-            acc += transaction.amount
-          }
-        })
-        chartData.push(acc)
-      })
-      this.setState({
-        data: {
-          ...this.state.data,
-          datasets: [{
-            ...this.state.data.datasets[0],
-            data: chartData
-          }]
-        }
-      })
-    })
+  }
+
+  // [0, 10, 3, 4]
+
+
+  createChartData = (props) => {
+    let chartData = props.categoryBudgets.reduce((chartData, category) => {
+      console.log(props.allTransactions);
+      let total = props.allTransactions.reduce((acc, transaction) => {
+        if(category.id === transaction.category_budget_id)
+          acc += transaction.amount
+        return acc
+      }, 0)
+      chartData.push(total)
+      return chartData
+    }, [])
+    this.setChartData(chartData)
   }
 
 

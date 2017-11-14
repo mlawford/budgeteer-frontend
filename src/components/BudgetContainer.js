@@ -11,6 +11,7 @@ export default class BudgetContainer extends Component {
     // The category budgets state should set to the right monthly budget's category budgets. Accomplish this with a serializer for monthly budget. UNFINISHED TENTATIVE FIX RIGHT NOW
     categoryBudgets: this.props.user.category_budgets,
     monthlyBudgetInput: 0,
+    allTransactions: [],
     transactions: 0, // <-- SET THIS TO THE RESULT OF YOUR INITIAL FETCH FROM THE BACK END
     transactionTitle: "",
     hasBudget: false,
@@ -37,7 +38,6 @@ export default class BudgetContainer extends Component {
 
   calculateProgressBar(){
     let percent = ((this.state.transactions/this.state.monthlyBudgetAmount)*100)
-    console.log("CALCULATED PERCENT FROM CALCULATEPROGRRESSBAR: ", percent);
     if(percent > 100){
       percent = 100
     }
@@ -45,15 +45,13 @@ export default class BudgetContainer extends Component {
     return percent
   }
 
-  // componentWillMount(){
-  //   this.getTransactionsTotal()
-  // }
 
-  componentDidMount() {
-  //  let transactionAcc = 0
-  //  console.log(this.state.data)
-  //  this.state.data.transactions.forEach(transaction => transactionAcc +=  transaction.amount)
-  //  console.log(transactionAcc)
+  componentWillMount() {
+    fetch('http://localhost:3000/api/transactions')
+    .then(res => res.json())
+    .then(json => {
+      this.setState({allTransactions: json})
+    })
     this.setState({
       hasBudget: this.determineHasBudget()
     })
@@ -96,7 +94,8 @@ export default class BudgetContainer extends Component {
     this.setState({
       transactions: this.state.transactions + event.target[2].value,
       transactionTitle: event.target[1].value,
-    })
+      allTransactions: [...this.state.allTransactions, {name: event.target[1].value, amount: parseInt(event.target[2].value), category_budget_id: parseInt(event.target[0].value)}]
+    }, console.log(this.state.allTransactions))
     fetch("http://localhost:3000/api/transactions",{
       headers:{
         'Accept': 'application/json',
