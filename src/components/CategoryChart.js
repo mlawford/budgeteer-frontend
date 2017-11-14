@@ -9,7 +9,7 @@ export default class CategoryChart extends Component {
         datasets: [{
           label: 'Language Profiency',
           backgroundColor: ['#31CB9B','#98e6ce'],
-          data: this.props.createChartData(),
+          data: [],
           hoverBoderColor: 'black'
         }]
       },
@@ -23,6 +23,40 @@ export default class CategoryChart extends Component {
           }]
         }
     }
+  }
+
+  componentDidMount() {
+    this.createChartData()
+  }
+
+  createChartData = () => {
+    let chartData = []
+    let transactionArr = []
+    fetch('http://localhost:3000/api/transactions')
+    .then(res => res.json())
+    .then(json => {
+      transactionArr = json
+    })
+    .then(() => {
+      this.props.categoryBudgets.forEach(category => {
+        let acc = 0
+        transactionArr.forEach(transaction => {
+          if(category.id === transaction.category_budget_id) {
+            acc += transaction.amount
+          }
+        })
+        chartData.push(acc)
+      })
+      this.setState({
+        data: {
+          ...this.state.data,
+          datasets: [{
+            ...this.state.data.datasets[0],
+            data: chartData
+          }]
+        }
+      })
+    })
   }
 
 

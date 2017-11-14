@@ -248,6 +248,7 @@ mapTransactions(json, counter, id){
         {
           this.state.hasBudget ?
           <div>
+            <CategoryChart {...this.state}/>
 
             <TransactionForm handleTransaction={this.handleTransaction} categoryBudgets={this.state.categoryBudgets}/>
             <Transaction {...this.state}/>
