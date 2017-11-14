@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import MonthlyBudget from './MonthlyBudget'
-import CategoryBudgetList from './CategoryBudgetList'
 import MonthlyBudgetForm from './MonthlyBudgetForm'
 import TransactionForm from './TransactionForm'
 import Transaction from './Transaction'
@@ -24,6 +22,7 @@ export default class BudgetContainer extends Component {
 
   calculateProgressBar(){
     let percent = ((this.state.monthlyAmountLeft/this.state.monthlyBudgetAmount)*100)
+    console.log("CALCULATED PERCENT FROM CALCULATEPROGRRESSBAR: ", percent);
     return 100-percent
   }
 
@@ -39,7 +38,6 @@ export default class BudgetContainer extends Component {
   calculateAmountLeft() {
     const monthly_budget_id = this.props.user.monthly_budgets[0].id
     let counter = 0
-    console.log("I'm here")
     fetch(`http://localhost:3000/api/monthly_budgets/${monthly_budget_id}`)
     .then(res => res.json())
     .then(json => this.addTransactions(json, counter))
@@ -50,11 +48,9 @@ export default class BudgetContainer extends Component {
     json.transactions.forEach(transaction => {
       counter += transaction.amount
     })
-    console.log('sdkjbsd', parseInt(this.state.monthlyBudgetAmount) - counter)
     this.setState({
       monthlyAmountLeft: (parseInt(this.state.monthlyBudgetAmount) - counter)
     })
-    console.log(this.state.monthlyBudgetAmount - counter)
     this.setState({
       toggle: false
     })
@@ -72,12 +68,11 @@ export default class BudgetContainer extends Component {
 
   handleTransaction = (event) => {
     event.preventDefault()
+    debugger
     this.setState({
       transactions: event.target[2].value,
       transactionTitle: event.target[1].value,
-
     })
-    console.log(this.state)
     fetch("http://localhost:3000/api/transactions",{
       headers:{
         'Accept': 'application/json',
@@ -99,11 +94,7 @@ export default class BudgetContainer extends Component {
   checkForOverBudget = (event) => {
     let categoryBudgetSum = parseInt(event.target[2].value) + parseInt(event.target[4].value) + parseInt(event.target[6].value)
     let monthlyBudgetSum = parseInt(event.target[0].value)
-    if(categoryBudgetSum > monthlyBudgetSum){
-      return true
-    }else{
-      return false
-    }
+    return (categoryBudgetSum > monthlyBudgetSum) ? true : false
   }
 
   handleSubmit = (event) => {
@@ -135,44 +126,42 @@ export default class BudgetContainer extends Component {
             category2Key: category2,
             category3Key: category3
           })
-      })
-
-
-    }, 500)
-      )
-      this.setState({hasBudget: true})
-    }else{
-      console.log("OVERBUDGET")
-    }
-  }
-
-
-  // For rendering category budget amounts left
-
-
-  getTransactions(id) {
-    let counter = 0
-    console.log("I'm here")
-    fetch(`http://localhost:3000/api/monthly_budgets/1`)
-    .then(res => res.json())
-    .then(json => this.mapTransactions(json,counter, id))
-  }
-
-    mapTransactions(json, counter, id){
-      json.transactions.forEach(transaction => {
-        if (transaction.category_budget_id === id)
-          counter += transaction.amount
         })
-        if (id === 1) {
-          this.setState({
-            category1AmountLeft: parseInt(this.state.categoryBudgets[0].category_budget_total) - counter
-          })
-        } else if (id === 2) {
-          this.setState({
-            category2AmountLeft: parseInt(this.state.categoryBudgets[1].category_budget_total) - counter
-          })
-        }
-      }
+
+
+      }, 500)
+    )
+    this.setState({hasBudget: true})
+  } else {
+    console.log("OVERBUDGET")
+  }
+}
+
+
+// For rendering category budget amounts left
+
+
+getTransactions(id) {
+  fetch(`http://localhost:3000/api/monthly_budgets/1`)
+  .then(res => res.json())
+  .then(json => this.mapTransactions(json, 0, id))
+}
+
+mapTransactions(json, counter, id){
+  json.transactions.forEach(transaction => {
+    if (transaction.category_budget_id === id)
+    counter += transaction.amount
+  })
+  if (id === 1) {
+    this.setState({
+      category1AmountLeft: parseInt(this.state.categoryBudgets[0].category_budget_total) - counter
+    })
+  } else if (id === 2) {
+    this.setState({
+      category2AmountLeft: parseInt(this.state.categoryBudgets[1].category_budget_total) - counter
+    })
+  }
+}
 
 
   render() {
@@ -192,19 +181,14 @@ export default class BudgetContainer extends Component {
       <div className="logo"/>
       <h1 className="grey-header">Welcome Back! </h1>
       <h2 className="banner">{monthNames[d.getMonth()]} </h2>
-      <div class="w3-light-grey w3-round">
-         <div class="w3-container w3-green w3-round" style={{"width":`${this.calculateProgressBar()}%`}}>${this.state.monthlyBudgetAmount-this.state.monthlyAmountLeft}</div>
+      <div className="w3-light-grey w3-round">
+         <div className="w3-container w3-green w3-round" style={{"width":`${this.calculateProgressBar()}%`}}>${this.state.monthlyBudgetAmount-this.state.monthlyAmountLeft}</div>
        </div> ${this.state.monthlyBudgetAmount}
        <div className="progress-left"> ${this.state.monthlyAmountLeft} </div>
         {
           this.state.hasBudget ?
           <div>
-
-
-
-
             <CategoryChart {...this.state}/>
-
             <TransactionForm handleTransaction={this.handleTransaction} categoryBudgets={this.state.categoryBudgets}/>
             <Transaction {...this.state}/>
           </div>
