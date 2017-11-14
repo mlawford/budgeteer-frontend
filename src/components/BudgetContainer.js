@@ -3,6 +3,8 @@ import MonthlyBudgetForm from './MonthlyBudgetForm'
 import TransactionForm from './TransactionForm'
 import Transaction from './Transaction'
 import CategoryChart from './CategoryChart'
+import 'bootstrap/dist/css/bootstrap.css';
+
 
 export default class BudgetContainer extends Component {
   state = {
@@ -242,11 +244,18 @@ mapTransactions(json, counter, id){
       <h2 className="banner">{monthNames[d.getMonth()]} </h2>
       <div className="w3-light-grey w3-round">
          <div className="w3-container w3-green w3-round" style={{"width":`${this.calculateProgressBar()}%`}}>${this.state.transactions}</div>
-       </div> ${this.state.monthlyBudgetAmount}
+       </div><br/>
        <div className="progress-left"> ${this.state.monthlyBudgetAmount - this.state.transactions} </div>
         {
           this.state.hasBudget ?
           <div>
+            {this.state.transactions > this.state.monthlyBudgetAmount ?
+            <div className="alert alert-danger warning-box">
+              <strong>Warning!</strong> You are over budget for the month!
+            </div>
+            :
+            null
+          }
             <CategoryChart {...this.state}/>
 
             <TransactionForm handleTransaction={this.handleTransaction} categoryBudgets={this.state.categoryBudgets}/>
