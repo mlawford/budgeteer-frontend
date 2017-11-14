@@ -5,6 +5,7 @@ import Transaction from './Transaction'
 import CategoryChart from './CategoryChart'
 
 export default class BudgetContainer extends Component {
+
   state = {
     data: {},
     monthlyBudgetAmount: this.props.user.monthly_budgets[0].budget_total,
@@ -13,11 +14,9 @@ export default class BudgetContainer extends Component {
     monthlyBudgetInput: 0,
     transactions: 0, // <-- SET THIS TO THE RESULT OF YOUR INITIAL FETCH FROM THE BACK END
     transactionTitle: "",
-    hasBudget: false,
     monthlyAmountLeft: this.calculateAmountLeft(),
     toggle: true,
-    category1AmountLeft: this.getTransactions(1),
-    category2AmountLeft: this.getTransactions(2),
+
   }
 
  //  getTransactionsTotal(){
@@ -69,6 +68,7 @@ export default class BudgetContainer extends Component {
 
 
   addTransactions(json, counter) {
+
     json.transactions.forEach(transaction => {
       counter += transaction.amount
     })
@@ -112,85 +112,93 @@ export default class BudgetContainer extends Component {
   this.setState({
     transactions: parseInt(this.state.transactions) + parseInt(event.target[2].value)
   })
+
+  this.checkForOverSpend()
 }
 
-  handleBudgetChange = (event) => {
-    this.setState({
-      monthlyBudgetInput: event.target.value
-    })
+
+
+  // checkForOverBudget = (event) => {
+  //   let categoryBudgetSum = parseInt(event.target[2].value) + parseInt(event.target[4].value) + parseInt(event.target[6].value)
+  //   let monthlyBudgetSum = parseInt(event.target[0].value)
+  //   return (categoryBudgetSum > monthlyBudgetSum) ? true : false
+  // }
+
+  checkForOverSpend = () => {
+    console.log(this.state.transactions)
+    console.log(this.state.monthlyBudgetAmount)
+    if(this.state.transactions > this.state.monthlyBudgetAmount){
+      alert("STOP SPENDING MONEY")
+    }else{
+      alert("Transaction Added!")
+    }
   }
 
-  checkForOverBudget = (event) => {
-    let categoryBudgetSum = parseInt(event.target[2].value) + parseInt(event.target[4].value) + parseInt(event.target[6].value)
-    let monthlyBudgetSum = parseInt(event.target[0].value)
-    return (categoryBudgetSum > monthlyBudgetSum) ? true : false
-  }
-
-  handleSubmit = (event) => {
-    event.preventDefault()
-
-    if (this.checkForOverBudget(event) === false) {
-      let category1 = {category_name: event.target[1].value, category_budget_total: event.target[2].value, monthly_budget_id: 0 }
-      let category2 = {category_name: event.target[3].value, category_budget_total: event.target[4].value, monthly_budget_id: 0 }
-      let category3 = {category_name: event.target[5].value, category_budget_total: event.target[6].value, monthly_budget_id: 0 }
-
-
-      fetch("http://localhost:3000/api/monthly_budgets",{
-        headers:{
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        method: "POST",
-        body: JSON.stringify({user_id:1, budget_total:this.state.monthlyBudgetInput})
-      })
-      .then(setTimeout(() => {
-        fetch("http://localhost:3000/api/category_budgets",{
-          headers:{
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          method: "POST",
-          body: JSON.stringify({
-            category1Key: category1,
-            category2Key: category2,
-            category3Key: category3
-          })
-        })
-
-
-      }, 500)
-    )
-    this.setState({hasBudget: true})
-  } else {
-    console.log("OVERBUDGET")
-  }
-}
+//   handleSubmit = (event) => {
+//     event.preventDefault()
+//
+//     if (this.checkForOverBudget(event) === false) {
+//       let category1 = {category_name: event.target[1].value, category_budget_total: event.target[2].value, monthly_budget_id: 0 }
+//       let category2 = {category_name: event.target[3].value, category_budget_total: event.target[4].value, monthly_budget_id: 0 }
+//       let category3 = {category_name: event.target[5].value, category_budget_total: event.target[6].value, monthly_budget_id: 0 }
+//
+//
+//       fetch("http://localhost:3000/api/monthly_budgets",{
+//         headers:{
+//           'Accept': 'application/json',
+//           'Content-Type': 'application/json'
+//         },
+//         method: "POST",
+//         body: JSON.stringify({user_id:1, budget_total:this.state.monthlyBudgetInput})
+//       })
+//       .then(setTimeout(() => {
+//         fetch("http://localhost:3000/api/category_budgets",{
+//           headers:{
+//             'Accept': 'application/json',
+//             'Content-Type': 'application/json'
+//           },
+//           method: "POST",
+//           body: JSON.stringify({
+//             category1Key: category1,
+//             category2Key: category2,
+//             category3Key: category3
+//           })
+//         })
+//
+//
+//       }, 500)
+//     )
+//     this.setState({hasBudget: true})
+//   } else {
+//     console.log("OVERBUDGET")
+//   }
+// }
 
 
 // For rendering category budget amounts left
 
 
-getTransactions(id) {
-  fetch(`http://localhost:3000/api/monthly_budgets/1`)
-  .then(res => res.json())
-  .then(json => this.mapTransactions(json, 0, id))
-}
-
-mapTransactions(json, counter, id){
-  json.transactions.forEach(transaction => {
-    if (transaction.category_budget_id === id)
-    counter += transaction.amount
-  })
-  if (id === 1) {
-    this.setState({
-      category1AmountLeft: parseInt(this.state.categoryBudgets[0].category_budget_total) - counter
-    })
-  } else if (id === 2) {
-    this.setState({
-      category2AmountLeft: parseInt(this.state.categoryBudgets[1].category_budget_total) - counter
-    })
-  }
-}
+// getTransactions(id) {
+//   fetch(`http://localhost:3000/api/monthly_budgets/1`)
+//   .then(res => res.json())
+//   .then(json => this.mapTransactions(json, 0, id))
+// }
+//
+// mapTransactions(json, counter, id){
+//   json.transactions.forEach(transaction => {
+//     if (transaction.category_budget_id === id)
+//     counter += transaction.amount
+//   })
+//   if (id === 1) {
+//     this.setState({
+//       category1AmountLeft: parseInt(this.state.categoryBudgets[0].category_budget_total) - counter
+//     })
+//   } else if (id === 2) {
+//     this.setState({
+//       category2AmountLeft: parseInt(this.state.categoryBudgets[1].category_budget_total) - counter
+//     })
+//   }
+// }
 
 
       // For calculating amount spent in each category for Chart
@@ -234,7 +242,7 @@ mapTransactions(json, counter, id){
     return (
 
       <div>
-      <div className="navbar">
+      <div className="navbar2">
         <a href="#home">Budgeteer</a>
       </div>
 
@@ -247,15 +255,15 @@ mapTransactions(json, counter, id){
        <div className="progress-left"> ${this.state.monthlyBudgetAmount - this.state.transactions} </div>
         {
           this.state.hasBudget ?
-          <div>
+          <div className="banner">
             <CategoryChart {...this.state}/>
-
-            <TransactionForm handleTransaction={this.handleTransaction} categoryBudgets={this.state.categoryBudgets}/>
-            <Transaction {...this.state}/>
+            <div className="inputs">
+              <TransactionForm handleTransaction={this.handleTransaction} categoryBudgets={this.state.categoryBudgets}/>
+              <Transaction {...this.state}/>
+            </div>
           </div>
           :
           <MonthlyBudgetForm handleBudgetInput={this.handleBudgetChange} monthlyBudgetInput={this.state.monthlyBudgetInput} handleSubmit={this.handleSubmit} />
-
       }
 
       </div>

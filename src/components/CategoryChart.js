@@ -25,8 +25,16 @@ export default class CategoryChart extends Component {
     }
   }
 
+
+
+
+
+
   componentDidMount() {
     this.createChartData()
+    setInterval(() => {
+      this.checkForUpdate()
+    }, 250);
   }
 
   createChartData = () => {
@@ -71,6 +79,13 @@ export default class CategoryChart extends Component {
 
   mapCategoryAmounts() {
     return this.props.categoryBudgets.map(category => category.category_budget_total)
+  }
+
+
+  checkForUpdate() {
+    if(this.props.transactions > (parseInt(this.state.data.datasets[0].data[0]) + parseInt(this.state.data.datasets[0].data[1]) + parseInt(this.state.data.datasets[0].data[2]))) {
+      this.createChartData()
+    }
   }
 
 
