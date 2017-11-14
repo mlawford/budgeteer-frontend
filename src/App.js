@@ -9,7 +9,8 @@ class App extends Component {
   constructor() {
     super()
     this.state = {
-      user: ""
+      user: "",
+      transactionsTotal: 0
     }
   }
 
@@ -20,7 +21,6 @@ class App extends Component {
       user: response
     }))
   }
-
 
   render() {
     return (

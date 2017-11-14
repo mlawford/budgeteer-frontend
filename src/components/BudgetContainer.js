@@ -5,13 +5,13 @@ import Transaction from './Transaction'
 import CategoryChart from './CategoryChart'
 
 export default class BudgetContainer extends Component {
-
   state = {
+    data: {},
     monthlyBudgetAmount: this.props.user.monthly_budgets[0].budget_total,
     // The category budgets state should set to the right monthly budget's category budgets. Accomplish this with a serializer for monthly budget. UNFINISHED TENTATIVE FIX RIGHT NOW
     categoryBudgets: this.props.user.category_budgets,
     monthlyBudgetInput: 0,
-    transactions: 0 ,
+    transactions: 0, // <-- SET THIS TO THE RESULT OF YOUR INITIAL FETCH FROM THE BACK END
     transactionTitle: "",
     hasBudget: false,
     monthlyAmountLeft: this.calculateAmountLeft(),
@@ -20,16 +20,40 @@ export default class BudgetContainer extends Component {
     category2AmountLeft: this.getTransactions(2),
   }
 
+ //  getTransactionsTotal(){
+ //   fetch("http://localhost:3000/api/monthly_budgets/1")
+ //   .then(response => response.json())
+ //   .then(response => this.setState({
+ //     data: response
+ //   }))
+ // }
+
+
+ changeTransactions(){
+   this.setState({
+     transactions: this.state.monthlyBudgetAmount-this.state.monthlyAmountLeft
+   })
+ }
+
   calculateProgressBar(){
-    let percent = ((this.state.monthlyAmountLeft/this.state.monthlyBudgetAmount)*100)
+    let percent = ((this.state.transactions/this.state.monthlyBudgetAmount)*100)
     console.log("CALCULATED PERCENT FROM CALCULATEPROGRRESSBAR: ", percent);
-    return 100-percent
+    if(percent > 100){
+      percent = 100
+    }
+
+    return percent
   }
 
-
-
+  // componentWillMount(){
+  //   this.getTransactionsTotal()
+  // }
 
   componentDidMount() {
+  //  let transactionAcc = 0
+  //  console.log(this.state.data)
+  //  this.state.data.transactions.forEach(transaction => transactionAcc +=  transaction.amount)
+  //  console.log(transactionAcc)
     this.setState({
       hasBudget: this.determineHasBudget()
     })
@@ -54,6 +78,7 @@ export default class BudgetContainer extends Component {
     this.setState({
       toggle: false
     })
+     setTimeout(this.changeTransactions(),10000)
   }
 
   determineHasBudget = () => {
@@ -65,12 +90,11 @@ export default class BudgetContainer extends Component {
   }
 
 
-
   handleTransaction = (event) => {
     event.preventDefault()
-    debugger
+
     this.setState({
-      transactions: event.target[2].value,
+      transactions: this.state.transactions + event.target[2].value,
       transactionTitle: event.target[1].value,
     })
     fetch("http://localhost:3000/api/transactions",{
@@ -81,9 +105,14 @@ export default class BudgetContainer extends Component {
       method: "POST",
       body: JSON.stringify({name: event.target[1].value, amount:event.target[2].value, category_budget_id: event.target[0].value})
     })
-    .then(this.calculateAmountLeft())
-    .then(this.getTransactions())
-  }
+    .then(this.setState({
+      transactions: ((this.state.monthlyBudgetAmount-(parseInt(this.state.monthlyAmountLeft)-parseInt(event.target[2].value))))
+  })
+  )
+  this.setState({
+    transactions: parseInt(this.state.transactions) + parseInt(event.target[2].value)
+  })
+}
 
   handleBudgetChange = (event) => {
     this.setState({
@@ -100,7 +129,7 @@ export default class BudgetContainer extends Component {
   handleSubmit = (event) => {
     event.preventDefault()
 
-    if (this.checkForOverBudget(event) === false){
+    if (this.checkForOverBudget(event) === false) {
       let category1 = {category_name: event.target[1].value, category_budget_total: event.target[2].value, monthly_budget_id: 0 }
       let category2 = {category_name: event.target[3].value, category_budget_total: event.target[4].value, monthly_budget_id: 0 }
       let category3 = {category_name: event.target[5].value, category_budget_total: event.target[6].value, monthly_budget_id: 0 }
@@ -182,13 +211,13 @@ mapTransactions(json, counter, id){
       <h1 className="grey-header">Welcome Back! </h1>
       <h2 className="banner">{monthNames[d.getMonth()]} </h2>
       <div className="w3-light-grey w3-round">
-         <div className="w3-container w3-green w3-round" style={{"width":`${this.calculateProgressBar()}%`}}>${this.state.monthlyBudgetAmount-this.state.monthlyAmountLeft}</div>
+         <div className="w3-container w3-green w3-round" style={{"width":`${this.calculateProgressBar()}%`}}>${this.state.transactions}</div>
        </div> ${this.state.monthlyBudgetAmount}
-       <div className="progress-left"> ${this.state.monthlyAmountLeft} </div>
+       <div className="progress-left"> ${this.state.monthlyBudgetAmount - this.state.transactions} </div>
         {
           this.state.hasBudget ?
           <div>
-            <CategoryChart {...this.state}/>
+
             <TransactionForm handleTransaction={this.handleTransaction} categoryBudgets={this.state.categoryBudgets}/>
             <Transaction {...this.state}/>
           </div>
