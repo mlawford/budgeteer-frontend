@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import NavBar from './components/NavBar'
 import './App.css';
 import { Route } from 'react-router-dom'
 import Welcome from './components/Welcome'
@@ -10,7 +9,8 @@ class App extends Component {
   constructor() {
     super()
     this.state = {
-      user: ""
+      user: "",
+      transactionsTotal: 0
     }
   }
 
@@ -21,7 +21,6 @@ class App extends Component {
       user: response
     }))
   }
-
 
   render() {
     return (
