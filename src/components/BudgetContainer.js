@@ -3,6 +3,9 @@ import MonthlyBudgetForm from './MonthlyBudgetForm'
 import TransactionForm from './TransactionForm'
 import Transaction from './Transaction'
 import CategoryChart from './CategoryChart'
+import TransactionList from './TransactionList'
+import 'bootstrap/dist/css/bootstrap.css';
+
 
 export default class BudgetContainer extends Component {
 
@@ -12,10 +15,13 @@ export default class BudgetContainer extends Component {
     // The category budgets state should set to the right monthly budget's category budgets. Accomplish this with a serializer for monthly budget. UNFINISHED TENTATIVE FIX RIGHT NOW
     categoryBudgets: this.props.user.category_budgets,
     monthlyBudgetInput: 0,
+    allTransactions: [],
     transactions: 0, // <-- SET THIS TO THE RESULT OF YOUR INITIAL FETCH FROM THE BACK END
     transactionTitle: "",
     monthlyAmountLeft: this.calculateAmountLeft(),
     toggle: true,
+    transactionToggle: false,
+    counter: 0
 
   }
 
@@ -36,7 +42,6 @@ export default class BudgetContainer extends Component {
 
   calculateProgressBar(){
     let percent = ((this.state.transactions/this.state.monthlyBudgetAmount)*100)
-    console.log("CALCULATED PERCENT FROM CALCULATEPROGRRESSBAR: ", percent);
     if(percent > 100){
       percent = 100
     }
@@ -44,15 +49,13 @@ export default class BudgetContainer extends Component {
     return percent
   }
 
-  // componentWillMount(){
-  //   this.getTransactionsTotal()
-  // }
 
-  componentDidMount() {
-  //  let transactionAcc = 0
-  //  console.log(this.state.data)
-  //  this.state.data.transactions.forEach(transaction => transactionAcc +=  transaction.amount)
-  //  console.log(transactionAcc)
+  componentWillMount() {
+    fetch('http://localhost:3000/api/transactions')
+    .then(res => res.json())
+    .then(json => {
+      this.setState({allTransactions: json})
+    })
     this.setState({
       hasBudget: this.determineHasBudget()
     })
@@ -96,7 +99,8 @@ export default class BudgetContainer extends Component {
     this.setState({
       transactions: this.state.transactions + event.target[2].value,
       transactionTitle: event.target[1].value,
-    })
+      allTransactions: [...this.state.allTransactions, {name: event.target[1].value, amount: parseInt(event.target[2].value), category_budget_id: parseInt(event.target[0].value)}]
+    }, console.log(this.state.allTransactions))
     fetch("http://localhost:3000/api/transactions",{
       headers:{
         'Accept': 'application/json',
@@ -231,6 +235,14 @@ export default class BudgetContainer extends Component {
       })
     }
 
+    handleToggle = () => {
+      this.setState({
+        transactionToggle: !this.state.transactionToggle,
+        counter: this.state.counter += 1
+      })
+      console.log(this.state.counter)
+    }
+
 
   render() {
     var monthNames = ["January", "February", "March", "April", "May", "June",
@@ -243,29 +255,52 @@ export default class BudgetContainer extends Component {
 
       <div>
       <div className="navbar2">
-        <a href="#home">Budgeteer</a>
+        <a>Budgeteer</a>
       </div>
 
-      <div className="logo"/>
+      <div className="logo2"/>
       <h1 className="grey-header">Welcome Back! </h1>
       <h2 className="banner">{monthNames[d.getMonth()]} </h2>
+        <div>
       <div className="w3-light-grey w3-round">
-         <div className="w3-container w3-green w3-round" style={{"width":`${this.calculateProgressBar()}%`}}>${this.state.transactions}</div>
-       </div> ${this.state.monthlyBudgetAmount}
+      <div className="w3-container w3-green w3-round" style={{"width":`${this.calculateProgressBar()}%`}}>${this.state.transactions}</div>
+       </div> <br/>
        <div className="progress-left"> ${this.state.monthlyBudgetAmount - this.state.transactions} </div>
+
         {
           this.state.hasBudget ?
-          <div className="banner">
+          <div>
+            {this.state.transactions > this.state.monthlyBudgetAmount ?
+            <div className="alert alert-danger warning-box">
+              <strong>Warning!</strong> You are over budget for the month!
+            </div>
+            :
+            null
+          }
+            <div className="banner">
             <CategoryChart {...this.state}/>
+            </div>
             <div className="inputs">
               <TransactionForm handleTransaction={this.handleTransaction} categoryBudgets={this.state.categoryBudgets}/>
-              <Transaction {...this.state}/>
             </div>
           </div>
           :
           <MonthlyBudgetForm handleBudgetInput={this.handleBudgetChange} monthlyBudgetInput={this.state.monthlyBudgetInput} handleSubmit={this.handleSubmit} />
       }
+         </div>
 
+
+    <div>
+      <button type="button" onClick={this.handleToggle}> Monthly Transactions </button>
+    </div>
+
+      {this.state.transactionToggle === true? <TransactionList allTransactions ={this.state.allTransactions}/>
+      :
+      null}
+
+      <div className="img-footer">
+
+      </div>
       </div>
     )
   }

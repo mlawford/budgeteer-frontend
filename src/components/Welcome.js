@@ -5,11 +5,8 @@ import '../icons8-money_bag.png';
 const Welcome = (props) => {
   return (
     <div>
-      <div className="navbar">
-        <a href="#home">Budgeteer</a>
 
-      </div>
-
+      <h1 className= "title"> Budgeteer </h1>
       <div className= "img-container">
         <div className= "layer"/>
         <h1 className= "banner"> Stop going overbudget. </h1>
@@ -21,6 +18,9 @@ const Welcome = (props) => {
         </div>
 
         <div className="img-body-container">
+
+        </div>
+        <div className="img-footer">
 
         </div>
         <div className="logo"/>
