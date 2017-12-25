@@ -2,7 +2,7 @@
 
 Budgeteer
 
-This repository contains the backend of the project; the frontend can be found [here](https://github.com/ryansperzel/budgeteer-frontend)
+This repository contains the frontend of the project; the backend can be found [here](https://github.com/ryansperzel/budgeteer-backend)
 
 ### Frontend
 
